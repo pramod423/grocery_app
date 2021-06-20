@@ -1,9 +1,23 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:grocery_app/provider/auth_provider.dart';
+import 'package:grocery_app/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 import 'screens/welcome_Screen.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (_) => AuthProvider(),
+      )
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -30,8 +44,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+      FirebaseAuth.instance.authStateChanges().listen((User user) {
+        if (user == null) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WelcomeScreen(),
+              ));
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              ));
+        }
+      });
     });
 
     super.initState();
