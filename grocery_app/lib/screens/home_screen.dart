@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery_app/screens/welcome_Screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const String id = 'home-screen';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

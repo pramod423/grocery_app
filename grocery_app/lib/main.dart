@@ -1,10 +1,11 @@
-import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery_app/provider/auth_provider.dart';
+import 'package:grocery_app/provider/location_provider.dart';
 import 'package:grocery_app/screens/home_screen.dart';
+import 'package:grocery_app/screens/map_screen.dart';
 import 'package:provider/provider.dart';
+import 'screens/splash_screen.dart';
 import 'screens/welcome_Screen.dart';
 
 void main() async {
@@ -14,6 +15,9 @@ void main() async {
     providers: [
       ChangeNotifierProvider(
         create: (_) => AuthProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => LocationProvider(),
       )
     ],
     child: MyApp(),
@@ -30,55 +34,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
       ),
-      home: SplashScreen(),
-    );
-  }
-}
-
-class SplashScreen extends StatefulWidget {
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    Timer(Duration(seconds: 3), () {
-      FirebaseAuth.instance.authStateChanges().listen((User user) {
-        if (user == null) {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => WelcomeScreen(),
-              ));
-        } else {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              ));
-        }
-      });
-    });
-
-    super.initState();
-  }
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset('images/gosi.jpg'),
-            Text(
-              'PS Store',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-      ),
+      initialRoute: SplashScreen.id,
+      routes: {
+        HomeScreen.id: (context) => HomeScreen(),
+        WelcomeScreen.id: (context) => WelcomeScreen(),
+        SplashScreen.id: (context) => SplashScreen(),
+        MapScreen.id: (context) => MapScreen()
+      },
     );
   }
 }

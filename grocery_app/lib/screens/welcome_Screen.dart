@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:grocery_app/provider/auth_provider.dart';
+import 'package:grocery_app/provider/location_provider.dart';
+import 'package:grocery_app/screens/map_screen.dart';
 import 'package:grocery_app/screens/onboard_screen.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  static const String id = 'welcome-screen';
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -82,6 +85,8 @@ class WelcomeScreen extends StatelessWidget {
               }));
     }
 
+    final locationData = Provider.of<LocationProvider>(context, listen: false);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -106,7 +111,14 @@ class WelcomeScreen extends StatelessWidget {
                 FlatButton(
                   color: Colors.deepOrangeAccent,
                   child: Text('Set Delivary Location'),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await locationData.getCurrentPosition();
+                    if (locationData.permissionAllowed == true) {
+                      Navigator.pushReplacementNamed(context, MapScreen.id);
+                    } else {
+                      print('permission not allowed');
+                    }
+                  },
                 ),
                 SizedBox(
                   height: 20,

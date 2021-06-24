@@ -1,6 +1,5 @@
 //for all the firebase users related services for user
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:grocery_app/models/user_model.dart';
 
 class UserServices {
