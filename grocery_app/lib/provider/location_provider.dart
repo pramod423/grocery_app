@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocationProvider with ChangeNotifier {
   double latitube;
   double longitube;
   bool permissionAllowed = false;
+  var selectedAddress;
 
   Future<void> getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
@@ -17,5 +20,19 @@ class LocationProvider with ChangeNotifier {
     } else {
       print('Permission not allow');
     }
+  }
+
+  void onCamerMove(CameraPosition cameraPosition) async {
+    this.latitube = cameraPosition.target.latitude;
+    this.longitube = cameraPosition.target.longitude;
+    notifyListeners();
+  }
+
+  Future<void> getMoveCamera() async {
+    final coordinates = new Coordinates(this.latitube, this.longitube);
+    final addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    this.selectedAddress = addresses.first;
+    print("${selectedAddress.featureName} : ${selectedAddress.addressLine}");
   }
 }
