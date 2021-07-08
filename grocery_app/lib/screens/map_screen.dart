@@ -54,13 +54,13 @@ class _MapScreenState extends State<MapScreen> {
             Positioned(
               bottom: 0.0,
               child: Container(
-                height: 200,
+                height: 100,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.orangeAccent,
                 child: Column(
                   children: [
-                    Text(locationData.longitube.toString()),
-                    Text(locationData.latitube.toString()),
+                    Text(locationData.selectedAddress.featureName),
+                    Text(locationData.selectedAddress.addressLine),
                     SizedBox(
                       height: 2,
                     ),

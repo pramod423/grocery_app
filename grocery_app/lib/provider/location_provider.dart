@@ -15,7 +15,14 @@ class LocationProvider with ChangeNotifier {
     if (position != null) {
       this.latitube = position.latitude;
       this.longitube = position.longitude;
+
+      final coordinates = new Coordinates(this.latitube, this.longitube);
+      final addresses =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      this.selectedAddress = addresses.first;
+
       this.permissionAllowed = true;
+
       notifyListeners();
     } else {
       print('Permission not allow');
@@ -29,10 +36,6 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<void> getMoveCamera() async {
-    final coordinates = new Coordinates(this.latitube, this.longitube);
-    final addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    this.selectedAddress = addresses.first;
     print("${selectedAddress.featureName} : ${selectedAddress.addressLine}");
   }
 }
